@@ -196,41 +196,51 @@ struct ForgotPasswordView: View {
     @State private var showConfirmation = false
     @State private var errorMessage: String?
     var body: some View {
-        VStack {
-            Text("Forgot Password")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-            
-            TextField("Enter your email", text: $email)
-                .padding()
+        ZStack {
+            Color.blue
+                .ignoresSafeArea()
+            Circle()
+                .scale(1.7)
+                .foregroundColor(.white.opacity(0.15))
+            Circle()
+                .scale(1.35)
+                .foregroundColor(.white)
+            VStack {
+                Text("Forgot Password")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding()
+                
+                TextField("Enter your email", text: $email)
+                    .padding()
+                    .frame(width: 300, height: 50)
+                    .background(Color.black.opacity(0.05))
+                    .cornerRadius(10)
+                    .padding(.bottom, 20)
+                
+                Button("Reset Password") {
+                    resetPassword(email: email)
+                }
+                .foregroundColor(.white)
                 .frame(width: 300, height: 50)
-                .background(Color.black.opacity(0.05))
+                .background(Color.blue)
                 .cornerRadius(10)
                 .padding(.bottom, 20)
-            
-            Button("Reset Password") {
-                resetPassword(email: email)
+                
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+                
+                if showConfirmation {
+                    Text("Password reset instructions sent to \(email)")
+                        .foregroundColor(.green)
+                        .padding()
+                }
             }
-            .foregroundColor(.white)
-            .frame(width: 300, height: 50)
-            .background(Color.blue)
-            .cornerRadius(10)
-            .padding(.bottom, 20)
-            
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
-            
-            if showConfirmation {
-                Text("Password reset instructions sent to \(email)")
-                    .foregroundColor(.green)
-                    .padding()
-            }
+            .padding()
         }
-        .padding()
     }
     
     func resetPassword(email: String) {
