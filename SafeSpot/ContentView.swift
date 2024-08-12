@@ -13,10 +13,11 @@ struct ContentView: View {
     @State private var username = ""
     @State private var password = ""
     @State private var wrongUsername: Float = 0
-    @State private var wrongPassword: Float  = 0
+    @State private var wrongPassword: Float = 0
     @State private var showingLoginScreen = false
     @State private var showPopUp = false // State variable to show custom pop-up
     @State private var showingForgotPassword = false // State variable to show Forgot Password view
+    @State private var showingRegisterScreen = false // State variable to show Register view
     
     var body: some View {
         NavigationView {
@@ -36,14 +37,13 @@ struct ContentView: View {
                         .bold()
                         .padding()
                     
-                    TextField("Username", text: $username)
+                    TextField("Email", text: $username)
                         .padding()
                         .frame(width: 300, height: 50)
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(10)
                         .border(.red, width: CGFloat(wrongUsername))
                         
-                    
                     SecureField("Password", text: $password)
                         .padding()
                         .frame(width: 300, height: 50)
@@ -53,6 +53,14 @@ struct ContentView: View {
                     
                     Button("Login") {
                         authenticateUser(username: username, password: password)
+                    }
+                    .foregroundColor(.white)
+                    .frame(width: 300, height: 50)
+                    .background(Color.green)
+                    .cornerRadius(10)
+                    
+                    Button("Create Account") {
+                        showingRegisterScreen = true
                     }
                     .foregroundColor(.white)
                     .frame(width: 300, height: 50)
@@ -72,6 +80,10 @@ struct ContentView: View {
                     NavigationLink(destination: ForgotPasswordView(), isActive: $showingForgotPassword) {
                         EmptyView()
                     }
+                    
+                    NavigationLink(destination: RegisterView(), isActive: $showingRegisterScreen) {
+                        EmptyView()
+                    }
                 }
                 
                 if showPopUp {
@@ -88,49 +100,94 @@ struct ContentView: View {
     }
     
     func authenticateUser(username: String, password: String) {
-        if username.lowercased() == "testuser" {
-            wrongUsername = 0
-            if password.lowercased() == "abc123" {
+        Auth.auth().signIn(withEmail: username, password: password) { authResult, error in
+            if let error = error {
+                print("Error signing in: \(error.localizedDescription)")
+                wrongUsername = 2
+                wrongPassword = 2
+                showPopUp = true
+            } else {
+                wrongUsername = 0
                 wrongPassword = 0
                 showingLoginScreen = true
-            } else {
-                wrongPassword = 2
-                wrongUsername = 2
-                showPopUp = true
             }
-        } else {
-            wrongUsername = 2
-            wrongPassword = 2
-            showPopUp = true
         }
     }
 }
 
-struct CustomPopUp: View {
-    @Binding var showPopUp: Bool
+struct RegisterView: View {
+    @State private var username = ""
+    @State private var password = ""
+    @State private var confirmationMessage = ""
+    @State private var showConfirmation = false
+    @State private var errorMessage: String?
     
     var body: some View {
-        VStack {
-            Text("Invalid Username or Password")
-                .font(.headline)
-                .padding()
-            
-            Button(action: {
-                showPopUp = false
-            }) {
-                Text("OK")
-                    .foregroundColor(.white)
+        ZStack {
+            Color(.blue.opacity(1.0))
+                .ignoresSafeArea()
+            Circle()
+                .scale(1.7)
+                .foregroundColor(.white.opacity(0.15))
+            Circle()
+                .scale(1.35)
+                .foregroundColor(.white)
+            VStack {
+                Text("Register")
+                    .font(.largeTitle)
+                    .bold()
                     .padding()
-                    .frame(width: 100)
-                    .background(Color.blue)
+                
+                TextField("Email", text: $username)
+                    .padding()
+                    .frame(width: 300, height: 50)
+                    .background(Color.black.opacity(0.05))
                     .cornerRadius(10)
+                    .padding(.bottom, 20)
+                
+                SecureField("Password", text: $password)
+                    .padding()
+                    .frame(width: 300, height: 50)
+                    .background(Color.black.opacity(0.05))
+                    .cornerRadius(10)
+                    .padding(.bottom, 20)
+                
+                Button("Register") {
+                    registerUser(username: username, password: password)
+                }
+                .foregroundColor(.white)
+                .frame(width: 300, height: 50)
+                .background(Color.green)
+                .cornerRadius(10)
+                .padding(.bottom, 20)
+                
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+                
+                if showConfirmation {
+                    Text(confirmationMessage)
+                        .foregroundColor(.green)
+                        .padding()
+                }
+            }
+            .padding()
+        }
+    }
+    func registerUser(username: String, password: String) {
+        Auth.auth().createUser(withEmail: username, password: password) { authResult, error in
+            if let error = error {
+                print("Error creating user: \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
+                showConfirmation = false
+            } else {
+                errorMessage = nil
+                confirmationMessage = "User registered successfully! You can now log in."
+                showConfirmation = true
             }
         }
-        .frame(width: 300, height: 150)
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .transition(.scale)
     }
 }
 
@@ -138,7 +195,6 @@ struct ForgotPasswordView: View {
     @State private var email = ""
     @State private var showConfirmation = false
     @State private var errorMessage: String?
-    
     var body: some View {
         VStack {
             Text("Forgot Password")
@@ -198,6 +254,34 @@ struct ForgotPasswordView: View {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Z0-9a-z.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
+    }
+}
+
+struct CustomPopUp: View {
+    @Binding var showPopUp: Bool
+    
+    var body: some View {
+        VStack {
+            Text("Invalid Username or Password")
+                .font(.headline)
+                .padding()
+            
+            Button(action: {
+                showPopUp = false
+            }) {
+                Text("OK")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 100)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+        }
+        .frame(width: 300, height: 150)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 10)
+        .transition(.scale)
     }
 }
 
