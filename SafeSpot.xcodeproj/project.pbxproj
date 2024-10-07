@@ -14,7 +14,21 @@
 		4BED41D82C5EF7780013B3E1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BED41D72C5EF7780013B3E1 /* GoogleService-Info.plist */; };
 		4BED41DB2C5EF9660013B3E1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 4BED41DA2C5EF9660013B3E1 /* FirebaseAnalytics */; };
 		4BED41DD2C5EFE400013B3E1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4BED41DC2C5EFE400013B3E1 /* FirebaseAuth */; };
+		4BED41E92CB386A90013B3E1 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4BED41E82CB386A90013B3E1 /* Alamofire */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4BED41E42CB3801A0013B3E1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4BED41C62C5EF4FE0013B3E1 /* SafeSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SafeSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BED41E92CB386A90013B3E1 /* Alamofire in Frameworks */,
 				4BED41DB2C5EF9660013B3E1 /* FirebaseAnalytics in Frameworks */,
 				4BED41DD2C5EFE400013B3E1 /* FirebaseAuth in Frameworks */,
 			);
@@ -84,6 +99,7 @@
 				4BED41C22C5EF4FE0013B3E1 /* Sources */,
 				4BED41C32C5EF4FE0013B3E1 /* Frameworks */,
 				4BED41C42C5EF4FE0013B3E1 /* Resources */,
+				4BED41E42CB3801A0013B3E1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -93,6 +109,7 @@
 			packageProductDependencies = (
 				4BED41DA2C5EF9660013B3E1 /* FirebaseAnalytics */,
 				4BED41DC2C5EFE400013B3E1 /* FirebaseAuth */,
+				4BED41E82CB386A90013B3E1 /* Alamofire */,
 			);
 			productName = SafeSpot;
 			productReference = 4BED41C62C5EF4FE0013B3E1 /* SafeSpot.app */;
@@ -124,6 +141,7 @@
 			mainGroup = 4BED41BD2C5EF4FE0013B3E1;
 			packageReferences = (
 				4BED41D92C5EF9660013B3E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				4BED41E72CB386A90013B3E1 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 4BED41C72C5EF4FE0013B3E1 /* Products */;
 			projectDirPath = "";
@@ -369,6 +387,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		4BED41E72CB386A90013B3E1 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -381,6 +407,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4BED41D92C5EF9660013B3E1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		4BED41E82CB386A90013B3E1 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BED41E72CB386A90013B3E1 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
